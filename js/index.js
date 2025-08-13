@@ -13,7 +13,7 @@ let columns = ['SongName', 'SongId', 'Difficulty',
 	'PlayRating'
 ]; //表头
 let dif = ['Past', 'Present', 'Future', 'Beyond', 'Eternal'];
-let shortenDif = {'Past':'pst', 'Present':'prs', 'Future':'ftr', 'Beyond':'byd', 'Eternal':'etr'};
+let shortenDif = { 'Past': 'pst', 'Present': 'prs', 'Future': 'ftr', 'Beyond': 'byd', 'Eternal': 'etr' };
 let csv = '';
 
 let currentArray = []; //当前的全部成绩对象数组
@@ -43,7 +43,7 @@ let rangeLowerBound = 1.0; //筛选中的最低定数边界
 
 let fakeCounter = 0; //嘻嘻
 
-$(document).ready(function() {
+$(document).ready(function () {
 	displayWindow('filter-window');
 	displayWindow('modify-window');
 	//初始化sqlite.js
@@ -70,14 +70,14 @@ $(document).ready(function() {
 	initailizeSearchResultListener();
 
 	initializeSticker();
-	$('#sticker').click(function() {
+	$('#sticker').click(function () {
 		fakeCounter++;
 		if (fakeCounter == 100) {
 			window.open('fakeResult.html');
 			fakeCounter = 0;
 		}
 	})
-	
+
 	// switchItemLoseScore();
 });
 
@@ -87,7 +87,7 @@ $(document).ready(function() {
  * 查询结果点击跳转监听,用全局变量viewMode控制跳转位置（表格/卡片）
  */
 function initailizeSearchResultListener() {
-	$('#search-result').change(function() {
+	$('#search-result').change(function () {
 		let songId = $('#search-result').val();
 		let difficulty = $('#search-difficulty').val();
 		let mode = '';
@@ -104,11 +104,11 @@ function initailizeSearchResultListener() {
  * 初始化排序方式监听
  */
 function initializeSortListener() {
-	$('#sort-mode').change(function() {
+	$('#sort-mode').change(function () {
 		// console.log($('#sort-mode').val() + '  ' + $('#sort-order').val())
 		filterResult(filteredArray, $('#sort-mode').val(), $('#sort-order').val());
 	})
-	$('#sort-order').change(function() {
+	$('#sort-order').change(function () {
 		// console.log($('#sort-mode').val() + '  ' + $('#sort-order').val())
 		filterResult(filteredArray, $('#sort-mode').val(), $('#sort-order').val());
 	})
@@ -117,7 +117,7 @@ function initializeSortListener() {
  * 初始化定数范围监听
  */
 function initailizeConstantRangeListener() {
-	$('#range-lower-bound').on('input', function() {
+	$('#range-lower-bound').on('input', function () {
 		let num = $('#range-lower-bound').val();
 		if (parseInt(num) > 12.0) {
 			$('#range-lower-bound').val("12.0");
@@ -134,7 +134,7 @@ function initailizeConstantRangeListener() {
 		console.log('range-lower-bound:' + $('#range-lower-bound').val())
 		filterByConstant();
 	});
-	$('#range-upper-bound').on('input', function() {
+	$('#range-upper-bound').on('input', function () {
 		let num = $('#range-upper-bound').val();
 		if (parseInt(num) > 12.0) {
 			$('#range-upper-bound').val("12.0");
@@ -162,7 +162,7 @@ function filterByConstant() {
 	}
 	console.log(rangeUpperBound, rangeLowerBound);
 	filteredArray = [];
-	currentArray.forEach(function(currentRow, index) {
+	currentArray.forEach(function (currentRow, index) {
 		if (currentRow.constant >= rangeLowerBound && currentRow.constant <= rangeUpperBound) {
 			filteredArray.push(currentRow)
 		}
@@ -184,7 +184,7 @@ function inputFile() {
  */
 function initializeUploadListener() {
 	//监听上传文件事件
-	$('#file-input').change(function() {
+	$('#file-input').change(function () {
 		console.log("file-input active");
 		let selectedFile = this.files[0];
 		if (selectedFile) {
@@ -192,7 +192,7 @@ function initializeUploadListener() {
 			console.log("selectedFileName:" + fileName);
 			if (fileName.endsWith(".csv")) {
 				let reader = new FileReader();
-				reader.onload = function(e) {
+				reader.onload = function (e) {
 					csvContent = reader.result;
 					console.log("CSV Content:" + "success");
 					runConvert(csvContent);
@@ -208,12 +208,12 @@ function initializeUploadListener() {
 		}
 		$('#file-input').val('');
 	});
-	$("#uploadExcel").on("change", function(e) {
+	$("#uploadExcel").on("change", function (e) {
 		let file = e.target.files[0];
 		if (!file) return;
 		let reader = new FileReader();
 		let finalOutputScore = [];
-		reader.onload = function(e) {
+		reader.onload = function (e) {
 			let data = e.target.result;
 			let workbook = XLSX.read(data, {
 				type: 'binary'
@@ -222,8 +222,8 @@ function initializeUploadListener() {
 			let sheet = workbook.Sheets[sheetName];
 			let columns = ['A', 'F']
 			let idDate = {};
-			
-			columns.forEach(function(column){
+
+			columns.forEach(function (column) {
 				let colArray = [];
 				let col = column + 2;
 				while (sheet[col]) {
@@ -235,8 +235,8 @@ function initializeUploadListener() {
 			idData['A'].shift(); //index
 			idData['F'].shift(); //difficulty
 			tempArray = currentArray;
-			idData['A'].forEach(function(cell, index){
-				if(cell == 127){
+			idData['A'].forEach(function (cell, index) {
+				if (cell == 127) {
 					//Particle Arts T T
 				}
 				let i = findInArray(currentArray, idx_constant[cell].songId, difList[idData['F'][index]]);
@@ -256,7 +256,8 @@ function initializeUploadListener() {
 				rowIndex++;
 			}
 			// 准备下载
-			XLSX.writeFile(workbook, "万能查分表xlsx格式（已填充）.xlsx", {
+			let time = new Date();
+			XLSX.writeFile(workbook, "万能查分表（已填充）" + time.getFullYear() + ("00" + time.getMonth()).substring(1, 3) + ("00" + time.getDay()).substring(1, 3) + ".xlsx", {
 				compression: true
 			});
 
@@ -327,7 +328,7 @@ function runConvert(csv) {
 		}
 	}
 	console.log(tempArray)
-	tempArray.sort(function(a, b) {
+	tempArray.sort(function (a, b) {
 		return resultSort(a, b, 'playRating', 1)
 	})
 	reloadContent(tempArray)
@@ -415,7 +416,7 @@ function convertToTable(currentRow, index) {
 function convertToCard(currentRow, index) {
 	let $cardElem = $('<div id="' + currentRow.songId + "-" + currentRow.difficulty + '">').addClass('single-card ' +
 		currentRow
-		.difficulty.toLowerCase());
+			.difficulty.toLowerCase());
 
 	$cardElem.append($('<div>').addClass('card-rank').text('#' + index));
 
@@ -487,7 +488,7 @@ function generateTable(array) {
 		$(".t-far").removeClass("hidden");
 		$(".t-lost").removeClass("hidden");
 	}
-	
+
 }
 /**
  * 计算recent10
@@ -527,9 +528,9 @@ function switchView() {
 function saveTableCSV() {
 	let temp = currentArray;
 	let csv = [columns.join(",")];
-	temp.forEach(function(row) {
+	temp.forEach(function (row) {
 		let r = [row.songName, row.songId, row.difficulty, row.score, row.perfect, row.criticalPerfect, row.far,
-			row.lost, row.constant, row.playRating
+		row.lost, row.constant, row.playRating
 		].join(",");
 		csv.push(r);
 	});
@@ -555,7 +556,7 @@ function saveTableCSV() {
  */
 function filterResult(array, attr, order) {
 	tempArray = array;
-	tempArray.sort(function(a, b) {
+	tempArray.sort(function (a, b) {
 		return resultSort(a, b, attr, order);
 	})
 	generateCard(tempArray);
@@ -563,10 +564,10 @@ function filterResult(array, attr, order) {
 }
 
 function reloadContent(array) {
-	array.sort(function(a, b) {
+	array.sort(function (a, b) {
 		return resultSort(a, b, 'playRating', 1);
 	})
-	array.forEach(function(currentRow, index) {
+	array.forEach(function (currentRow, index) {
 		currentRow.innerIndex = index;
 	})
 	saveLocalStorage(array);
@@ -591,7 +592,7 @@ function searchSong() {
 	} else {
 		select.append($('<option selected="selected">').addClass('search-option').val("0").text("共有" + optionList
 			.length + "条结果"));
-		optionList.forEach(function(song, index) {
+		optionList.forEach(function (song, index) {
 			select.append($("<option>")
 				.addClass("search-result-option")
 				.val(song.songId)
@@ -612,7 +613,7 @@ function handleScroll(unitid, index) {
 function generateOptionList(str, difficulty) {
 	let searchResult = [];
 	let pair = {};
-	filteredArray.forEach(function(currentRow, index) {
+	filteredArray.forEach(function (currentRow, index) {
 		if (currentRow.difficulty === difficulty) {
 			// console.log("currentRow:" + currentRow.songId + "-" + currentRow.difficulty);
 			if (currentRow.songName.toLowerCase().indexOf(str) !== -1) {
@@ -634,7 +635,7 @@ function showStatistics(array = currentArray) {
 	let str = '';
 	let c = 0;
 	console.log(sts)
-	list.forEach(function(l) {
+	list.forEach(function (l) {
 		let n = sts[l] ? sts[l].length : 0;
 		c += n;
 		str += `${l}: ${n}\n`
@@ -660,10 +661,10 @@ function saveVHZEK() {
 		let temp = currentArray;
 		console.log(temp)
 		let csv = [columns.join(",")];
-		temp.forEach(function(row) {
+		temp.forEach(function (row) {
 			let r = [row.songName, row.songId, row.difficulty, row.score, row.perfect, row.criticalPerfect, row
 				.far,
-				row.lost, row.constant, row.playRating
+			row.lost, row.constant, row.playRating
 			].join(",");
 			csv.push(r);
 		});
@@ -708,12 +709,12 @@ async function initializeVHZEK() {
 			songId: 'dualdoom',
 			constant: ['3.5', '6.5', '8.9', '', '10.3']
 		})
-		idx_constant = idx_constant.sort(function(a, b) {
+		idx_constant = idx_constant.sort(function (a, b) {
 			return resultSort(a, b, 'idx', -1);
 		})
 
 		idx_constant.shift();
-		
+
 		$('#load-sl').text("✔曲目列表文件已加载").css("color", "green");
 		$('#load-sl').hide("slow").css("height", "0");
 	} catch (error) {
