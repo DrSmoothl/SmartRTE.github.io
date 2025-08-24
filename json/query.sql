@@ -531,6 +531,14 @@ INSERT INTO allsongs (songname, songId, PST, PRS, FTR, BYD, ETR) VALUES ('Dual D
 INSERT INTO allsongs (songname, songId, PST, PRS, FTR, BYD, ETR) VALUES ('Lilly', 'lilly', 5.0, 8.4, 9.9, '', 10.8);
 INSERT INTO allsongs (songname, songId, PST, PRS, FTR, BYD, ETR) VALUES ('Extradimensional Cosmic Phenomenon', 'extradimensional', 6.5, 8.8, 10.6, '', 11.3);
 
+--6.8.0
+INSERT INTO allsongs (songname, songId, PST, PRS, FTR, BYD, ETR) VALUES ('disintegration', 'disintegration', 4.0, 6.5, 8.3, '', 9.8);
+INSERT INTO allsongs (songname, songId, PST, PRS, FTR, BYD, ETR) VALUES ('Factorder', 'factorder', 2.5, 6.5, 8.6, '', 9.6);
+INSERT INTO allsongs (songname, songId, PST, PRS, FTR, BYD, ETR) VALUES ('incomplete the one', 'incompleteone', 3.5, 7.5, 8.8, '', 9.9);
+INSERT INTO allsongs (songname, songId, PST, PRS, FTR, BYD, ETR) VALUES ('CHAOSBLAST', 'chaosblast', 4.5, 7.8, 9.6, '', 10.5);
+INSERT INTO allsongs (songname, songId, PST, PRS, FTR, BYD, ETR) VALUES ('Welcome, Queen of Fiction', 'welcomequeen', 5.0, 8.5, 10.1, '', 10.9);
+INSERT INTO allsongs (songname, songId, PST, PRS, FTR, BYD, ETR) VALUES ('AlterGate', 'altergate', 5.5, 8.7, 10.7, '', '');
+
 COMMIT TRANSACTION;
 
 PRAGMA foreign_keys = on;
